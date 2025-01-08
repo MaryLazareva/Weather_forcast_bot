@@ -2,6 +2,7 @@ import os
 import requests
 from aiogram import Router, types
 from aiogram.filters import Command
+from aiogram.types.input_file import BufferedInputFile
 
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
@@ -142,6 +143,8 @@ async def get_weather(message: types.Message):
             icon = icon_result.scalars().first()
 
         if icon:
-            await message.answer_photo(photo=icon.image_data, caption=forecast_text)
+            image_file = BufferedInputFile(file=icon.image_data, filename=details.icon_code)  # Данные изображения в байтах
+            
+            await message.answer_photo(photo=image_file, caption=forecast_text)
         else:
             await message.answer(forecast_text)
