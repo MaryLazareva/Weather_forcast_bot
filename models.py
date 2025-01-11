@@ -8,6 +8,8 @@ class CityForecast(Base):
     __tablename__="city_forecast"
 
     id = Column(Integer, primary_key=True, index=True)
+    country = Column(String, index=True)
+    region = Column(String, index=True)
     city = Column(String, index=True)
     date_time = Column(DateTime, index=True) # Дата и время прогноза (dt_txt)
 
