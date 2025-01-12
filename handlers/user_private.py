@@ -138,6 +138,14 @@ async def get_weather_data(message: types.Message, state: FSMContext):
 
             # Сохранение деталей прогноза
             icon_code = forecast['weather'][0]['icon']
+            icon = await session.execute(select(WeatherIcons).where(WeatherIcons.icon_code == icon_code))
+            icon = icon.scalars().first()
+            if not icon:
+                icon_url = f'https://openweathermap.org/img/wn/{icon_code}@2x.png'
+                image_data = requests.get(icon_url).content
+                icon = WeatherIcons(icon_code=icon_code, image_data=image_data)
+                session.add(icon)
+                
             forecast_details = ForecastDetails(
                 city_forecast_id=city_forecast.id,
                 temperature=forecast['main']['temp'],
